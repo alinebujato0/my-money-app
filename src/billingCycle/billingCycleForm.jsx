@@ -4,8 +4,8 @@ import { bindActionCreators } from 'redux'
 import { reduxForm, Field, formValueSelector } from 'redux-form'
 
 import { init } from './billingCycleActions'
-import LabelAndInput from '../common/form/LabelAndInput'
-import CreditList from './creditList'
+import LabelAndInput from '../common/form/labelAndInput'
+import ItemList from './itemList'
 
 class BillingCycleForm extends Component {
   
@@ -17,7 +17,8 @@ class BillingCycleForm extends Component {
       readOnly,
       submitClass,
       submitLabel,
-      credits
+      credits,
+      debts
     } = this.props
 
     return(
@@ -26,7 +27,8 @@ class BillingCycleForm extends Component {
           <Field name='name' component={LabelAndInput} readOnly={readOnly} label='Nome' cols='12 4' placeholder='Informe o nome' />
           <Field name='month' component={LabelAndInput} readOnly={readOnly} type='number' label='Mês' cols='12 4' placeholder='Informe o mês' />
           <Field name='year' component={LabelAndInput} readOnly={readOnly} type='number' label='Ano' cols='12 4' placeholder='Informe o ano' />
-          <CreditList cols='12 6' list={credits} readOnly={readOnly}/>
+          <ItemList cols='12 6' list={credits} readOnly={readOnly} field='credits' legend='Créditos' />
+          <ItemList cols='12 6' list={debts} readOnly={readOnly} field='debts' legend='Débitos' showStatus={true} />
         </div>
         <div className='box-footer'>
           <button type='submit' className={`btn btn-${submitClass}`}>
@@ -42,6 +44,9 @@ class BillingCycleForm extends Component {
 BillingCycleForm = reduxForm({form: 'billingCycleForm', destroyOnUnmount:false})(BillingCycleForm)
 const selector = formValueSelector('billingCycleForm')
 
-const mapStateToProps = state => ({credits: selector(state, 'credits')})
+const mapStateToProps = state => ({
+  credits: selector(state, 'credits'),
+  debts: selector(state, 'debts')
+})
 const mapDispatchToProps = dispatch => bindActionCreators({init}, dispatch)
 export default connect(mapStateToProps, mapDispatchToProps)(BillingCycleForm)
